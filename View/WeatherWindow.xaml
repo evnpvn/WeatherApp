@@ -21,7 +21,7 @@
         <StackPanel Margin="20">
             <TextBlock Text="Search for a city:"/>
             <TextBox Text="{Binding Query, Mode=TwoWay}"/>
-            <Button Margin="1" Content="Search" Command="{}"/>
+            <Button Margin="1" Content="Search" Command="{Binding }"/>
             <ListView>
                 <ListView.ItemTemplate>
                     <DataTemplate>

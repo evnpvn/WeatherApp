@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeatherApp.Model;
+using WeatherApp.ViewModel.Helpers;
 
 namespace WeatherApp.ViewModel
 {
-    class WeatherVM : INotifyPropertyChanged , ICommand
+    public class WeatherVM : INotifyPropertyChanged
     {
 		private string _query;
 		public string Query
@@ -68,22 +69,33 @@ namespace WeatherApp.ViewModel
 
 		//INotifyPropertyChanged implementation
 		public event PropertyChangedEventHandler PropertyChanged;
-		public event EventHandler CanExecuteChanged;
 
 		private void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		//ICommand implementation
-		public bool CanExecute(object parameter)
+
+		public async void CreateQuery()
 		{
-			throw new NotImplementedException();
+			List<City> cities = await AccuWeatherHelper.GetCitiesAsync(Query);
 		}
 
-		public void Execute(object parameter)
-		{
-			throw new NotImplementedException();
-		}
+		///ICommand implementation
+		//public event EventHandler CanExecuteChanged;
+
+		//public bool CanExecute(object parameter)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//public void Execute(object parameter)
+		//{
+		//	List<City> cities = AccuWeatherHelper.GetCitiesAsync((parameter as WeatherVM).Query).Result;
+
+		//	City city = cities.FirstOrDefault();
+
+		//	WeatherConditions weatherConditions = AccuWeatherHelper.GetWeatherConditionsAsync(city.Key).Result;
+		//}
 	}
 }
