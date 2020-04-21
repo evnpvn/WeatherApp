@@ -23,6 +23,6 @@ namespace WeatherApp.View
         public WeatherWindow()
         {
             InitializeComponent();
-        }
+		}
     }
 }
