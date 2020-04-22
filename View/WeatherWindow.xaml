@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherApp.View"
         xmlns:vm="clr-namespace:WeatherApp.ViewModel"
+        xmlns:converters="clr-namespace:WeatherApp.ViewModel.ValueConverters"
         mc:Ignorable="d"
         Title="WeatherWindow" Height="600" Width="400">
 
     <Window.Resources>
         <vm:WeatherVM x:Key="vm"/>
+        <converters:BooltoRain x:Key="booltoRain"/>
     </Window.Resources>
 
     <Grid DataContext="{StaticResource vm}">
@@ -20,13 +22,21 @@
         
         <StackPanel Margin="20">
             <TextBlock Text="Search for a city:"/>
-            <TextBox Text="{Binding Query, Mode=TwoWay}"/>
-            <Button Margin="1" Content="Search" Command="{Binding }"/>
-            <ListView>
+            <TextBox Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Margin="1" Content="Search" Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding Query}"/>
+            <ListView ItemsSource="{Binding CitiesList}" SelectedValue="{Binding SearchedCity}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <TextBlock/>
+                            <StackPanel>
+                                <TextBlock FontSize="14" FontWeight="Bold"
+                                           Text="{Binding LocalizedName}" />
+                                <TextBlock FontSize="10"
+                                           Text="{Binding AdministrativeArea.LocalizedName}"/>
+                                <TextBlock FontSize="10"
+                                           Text="{Binding Country.LocalizedName}"/>
+                            </StackPanel>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -46,6 +56,9 @@
                 <TextBlock Text="{Binding CurrentConditions.WeatherText}" 
                            Foreground="#f4f4f8" 
                            FontSize="18" Margin="20,0"/>
+                <TextBlock Text="{Binding CurrentConditions.HasPrecipitation, Converter={StaticResource ResourceKey=booltoRain}}"
+                           Foreground="#f4f4f8" 
+                           FontSize="16" Margin="20,0"/>
             </StackPanel>
 
             <TextBlock Grid.Column="1" VerticalAlignment="Center"

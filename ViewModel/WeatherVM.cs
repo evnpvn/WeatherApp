@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeatherApp.Model;
+using WeatherApp.ViewModel.Commands;
 using WeatherApp.ViewModel.Helpers;
 
 namespace WeatherApp.ViewModel
 {
     public class WeatherVM : INotifyPropertyChanged
     {
+		//Properties
 		private string _query;
 		public string Query
 		{
@@ -42,32 +45,46 @@ namespace WeatherApp.ViewModel
 			{ 
 				_searchedCity = value;
 				OnPropertyChanged("SearchedCity");
+
+				if (this.CitiesList.Count != 0)
+				{
+					GetCurrentConditions(this.SearchedCity.Key);
+				}			
 			}
 		}
 
+		public SearchCommand SearchCommand { get; set; }
+
+		public ObservableCollection<City> CitiesList { get; set; }
+
+
+		//Constructor
 		public WeatherVM()
 		{
 			if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()) == true)
 			{
-				SearchedCity = new City()
+				this.SearchedCity = new City()
 				{
 					LocalizedName = "New York"
 				};
-				CurrentConditions = new WeatherConditions()
+				this.CurrentConditions = new WeatherConditions()
 				{
 					WeatherText = "Cloudy",
 					Temperature = new Temperature()
 					{
 						Metric = new WeatherUnits
 						{
-							Value = 10
+							Value = "10"
 						}
 					}
 				};
-			}
+			};
+			this.SearchCommand = new SearchCommand(this);
+			this.CitiesList = new ObservableCollection<City>();
 		}
 
-		//INotifyPropertyChanged implementation
+
+		//INotifyPropertyChanged interface implementation
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string propertyName)
@@ -76,26 +93,28 @@ namespace WeatherApp.ViewModel
 		}
 
 
+		//Custom method
 		public async void CreateQuery()
 		{
-			List<City> cities = await AccuWeatherHelper.GetCitiesAsync(Query);
+			List<City> cities = await AccuWeatherHelper.GetCitiesAsync(this.Query);
+			this.CitiesList.Clear();
+			
+			IEnumerable<City> first4Cities = cities.Take(4);
+
+			foreach(City city in first4Cities)
+			{
+				this.CitiesList.Add(city);
+			}
 		}
 
-		///ICommand implementation
-		//public event EventHandler CanExecuteChanged;
+		private async void GetCurrentConditions(string cityKey)
+		{
+			//Clear the searchbox
+			this.Query = "";
 
-		//public bool CanExecute(object parameter)
-		//{
-		//	throw new NotImplementedException();
-		//}
-
-		//public void Execute(object parameter)
-		//{
-		//	List<City> cities = AccuWeatherHelper.GetCitiesAsync((parameter as WeatherVM).Query).Result;
-
-		//	City city = cities.FirstOrDefault();
-
-		//	WeatherConditions weatherConditions = AccuWeatherHelper.GetWeatherConditionsAsync(city.Key).Result;
-		//}
+			//Call the async method
+			//assign to a weather conditions object
+			this.CurrentConditions = await AccuWeatherHelper.GetWeatherConditionsAsync(cityKey);
+		}
 	}
 }

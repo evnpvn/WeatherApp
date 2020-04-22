@@ -52,7 +52,7 @@ namespace WeatherApp.Model
     public class WeatherUnits
     {
         [JsonProperty("Value")]
-        public double Value { get; set; }
+        public string Value { get; set; }
 
         [JsonProperty("Unit")]
         public string Unit { get; set; }
