@@ -27,7 +27,7 @@ namespace WeatherApp.ViewModel.Helpers
 
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(url);
+                HttpResponseMessage response = await client.GetAsync(url);      
                 string json = await response.Content.ReadAsStringAsync();
                 cities = JsonConvert.DeserializeObject<List<City>>(json);
             }

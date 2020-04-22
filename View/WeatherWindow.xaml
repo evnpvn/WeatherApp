@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:WeatherApp.ViewModel"
         xmlns:converters="clr-namespace:WeatherApp.ViewModel.ValueConverters"
         mc:Ignorable="d"
-        Title="WeatherWindow" Height="600" Width="400">
+        Title="WeatherWindow" Height="500" Width="400">
 
     <Window.Resources>
         <vm:WeatherVM x:Key="vm"/>
