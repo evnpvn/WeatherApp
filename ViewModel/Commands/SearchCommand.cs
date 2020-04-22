@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace WeatherApp.ViewModel.Commands
@@ -36,7 +32,7 @@ namespace WeatherApp.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            VM.CreateQuery();
+            VM.ExecuteQuery();
         }
     }
 }

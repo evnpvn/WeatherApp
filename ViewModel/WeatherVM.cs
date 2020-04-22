@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using WeatherApp.Model;
 using WeatherApp.ViewModel.Commands;
 using WeatherApp.ViewModel.Helpers;
@@ -93,8 +89,7 @@ namespace WeatherApp.ViewModel
 		}
 
 
-		//Custom method
-		public async void CreateQuery()
+		public async void ExecuteQuery()
 		{
 			List<City> cities = await AccuWeatherHelper.GetCitiesAsync(this.Query);
 			this.CitiesList.Clear();
